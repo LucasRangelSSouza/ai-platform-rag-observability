@@ -1,0 +1,4 @@
+[
+  {"id":"architecture","content":"The reference gateway can route approved model requests and records an explicit fallback decision."},
+  {"id":"safety","content":"The retrieval service abstains when the approved corpus lacks evidence and rejects prompt injection patterns."}
+]

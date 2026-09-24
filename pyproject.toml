@@ -1,0 +1,10 @@
+[project]
+name = "ai-platform-rag-observability"
+version = "0.1.0"
+requires-python = ">=3.10"
+
+[project.scripts]
+rag-platform = "rag_platform.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["rag_platform*"]
