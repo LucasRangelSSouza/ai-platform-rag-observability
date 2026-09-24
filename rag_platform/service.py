@@ -5,10 +5,11 @@ from typing import Any
 
 
 INJECTION_PATTERNS = ("ignore previous", "system prompt", "reveal instructions")
+STOPWORDS = {"about", "does", "from", "have", "how", "into", "that", "the", "this", "what", "when", "with"}
 
 
 def tokens(text: str) -> set[str]:
-    return {part for part in re.findall(r"[a-z0-9]{3,}", text.casefold())}
+    return {part for part in re.findall(r"[a-z0-9]{3,}", text.casefold()) if part not in STOPWORDS}
 
 
 def retrieve(question: str, corpus: list[dict[str, str]], limit: int = 2) -> list[dict[str, Any]]:
