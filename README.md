@@ -19,9 +19,12 @@ flowchart LR
 ```powershell
 make check
 python -m rag_platform --corpus data\corpus_fixture.json --question "How does the retrieval service abstain?" --output artifacts\result.json
+python -m rag_platform --corpus data\corpus_fixture.json --question "How does the retrieval service abstain?" --evaluation-cases data\evaluation_fixture.json --output artifacts\evaluation-result.json
 ```
 
 The service returns citations for retrieved answers, abstains when no approved evidence matches, and refuses recognized prompt-injection patterns. The output carries a trace ID, outcome, citation count, and safety reason.
+
+The labeled two-case fixture reports `recall@2 = 1.0` and citation coverage `1.0`. Those values verify the current deterministic fixture only; they do not establish production retrieval quality.
 
 Pass `--trace-output artifacts\traces.jsonl` to append a local metadata-only trace. It records the gateway label, outcome, citation document IDs, and a SHA-256 digest of the question. It does not write the raw question or answer to the trace sink.
 

@@ -1,0 +1,4 @@
+[
+  {"id": "abstention", "question": "How does the retrieval service abstain?", "expected_document_ids": ["safety"]},
+  {"id": "gateway", "question": "Which component routes approved model requests?", "expected_document_ids": ["architecture"]}
+]

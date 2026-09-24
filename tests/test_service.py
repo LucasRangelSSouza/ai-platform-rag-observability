@@ -3,6 +3,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from rag_platform.service import answer
+from rag_platform.evaluation import evaluate
 from rag_platform.tracing import append_trace, trace
 
 
@@ -32,6 +33,14 @@ class ServiceTests(unittest.TestCase):
             saved = output.read_text(encoding="utf-8")
         self.assertIn('"question_sha256"', saved)
         self.assertNotIn("How does the retrieval service abstain?", saved)
+
+    def test_fixture_evaluation_reports_recall_and_citation_coverage(self):
+        metrics = evaluate(CORPUS, [
+            {"id": "safety", "question": "How does the retrieval service abstain?", "expected_document_ids": ["safety"]},
+            {"id": "gateway", "question": "Which component routes approved model requests?", "expected_document_ids": ["gateway"]},
+        ])
+        self.assertEqual(metrics["recall_at_k"], 1.0)
+        self.assertEqual(metrics["citation_coverage"], 1.0)
 
 
 if __name__ == "__main__":
