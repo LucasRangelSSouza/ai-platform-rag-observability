@@ -15,7 +15,7 @@ flowchart LR
 ## Local proof
 
 ```powershell
-python -m unittest discover -s tests -v
+make check
 python -m rag_platform --corpus data\corpus_fixture.json --question "How does the retrieval service abstain?" --output artifacts\result.json
 ```
 
