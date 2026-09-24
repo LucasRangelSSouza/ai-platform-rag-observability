@@ -21,6 +21,8 @@ python -m rag_platform --corpus data\corpus_fixture.json --question "How does th
 
 The service returns citations for retrieved answers, abstains when no approved evidence matches, and refuses recognized prompt-injection patterns. The output carries a trace ID, outcome, citation count, and safety reason.
 
+Pass `--trace-output artifacts\traces.jsonl` to append a local metadata-only trace. It records the gateway label, outcome, citation document IDs, and a SHA-256 digest of the question. It does not write the raw question or answer to the trace sink.
+
 ## Integration boundary
 
 9Router and Langfuse remain optional external services. This repository does not bundle their code, credentials, or deployment configuration. A deployment adapter must supply its own endpoint, access controls, retention policy, and trace redaction rules.
