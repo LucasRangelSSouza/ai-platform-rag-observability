@@ -1,5 +1,7 @@
 # Observable RAG without unsupported answers
 
+**Versioned reference:** [v0.1.0](https://github.com/LucasRangelSSouza/ai-platform-rag-observability/tree/v0.1.0)
+
 A retrieval system needs a visible response boundary before it needs a more elaborate prompt. This reference starts with three outcomes. It answers only when an approved corpus passage supplies lexical evidence, abstains when no passage matches, and refuses requests that contain tested prompt-injection patterns.
 
 The retrieval result is part of the response contract. An answered result carries the identifiers and scores of the passages that supplied evidence. The fixture makes this behavior deterministic, which matters for regression tests: a new ranking or model adapter should not silently remove citations from an answer path.
