@@ -28,3 +28,7 @@ The service returns citations for retrieved answers, abstains when no approved e
 ## Limitations
 
 The fixture corpus and deterministic answer path demonstrate control flow, not model quality. The project makes no claim about production latency, provider availability, retrieval recall, or safety coverage beyond the tested cases.
+
+## Article draft
+
+[Observable RAG without unsupported answers](articles/observable-rag-without-unsupported-answers.md) and its [claim-to-evidence map](articles/claim-map.md) are Markdown drafts for later manual publication.
