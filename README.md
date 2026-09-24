@@ -1,5 +1,7 @@
 # AI platform RAG observability
 
+![Social preview for the AI platform RAG observability project](docs/assets/social-preview.png)
+
 A local, cited RAG reference that separates retrieval, safety behavior, response generation, and trace capture. It runs with a deterministic fixture corpus and exposes the integration boundaries for 9Router as a gateway and Langfuse as an observability backend.
 
 ```mermaid
