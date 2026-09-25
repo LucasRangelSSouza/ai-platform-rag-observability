@@ -1,7 +1,15 @@
+[build-system]
+requires = ["setuptools>=69,<81"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "ai-platform-rag-observability"
-version = "0.1.0"
+version = "0.2.0"
+description = "Cited RAG reference with gateway routing, redacted traces, and offline evaluation."
+readme = "README.md"
+license = { text = "Apache-2.0" }
 requires-python = ">=3.10"
+dependencies = ["pyarrow==18.1.0"]
 
 [project.scripts]
 rag-platform = "rag_platform.__main__:main"

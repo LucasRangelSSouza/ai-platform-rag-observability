@@ -1,0 +1,32 @@
+# Local profiles only. Ports bind to 127.0.0.1; no provider key is needed for either profile.
+x-hardening: &hardening
+  image: rag-platform:0.2.0
+  build: .
+  read_only: true
+  tmpfs:
+    - /tmp
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+  user: "10001"
+  restart: unless-stopped
+  mem_limit: 1g
+
+services:
+  rag-fixture:
+    <<: *hardening
+    profiles: ["fixture"]
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./data:/data:ro
+
+  rag-education:
+    <<: *hardening
+    profiles: ["education"]
+    command: ["serve", "--host", "0.0.0.0", "--port", "8080", "--education-dir", "/data/education", "--release", "${EDUCATION_RELEASE:-v1}"]
+    ports:
+      - "127.0.0.1:8081:8080"
+    volumes:
+      - ${EDUCATION_RELEASE_DIR:-./data/education_fixture}:/data/education:ro

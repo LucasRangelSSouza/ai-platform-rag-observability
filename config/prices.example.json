@@ -1,0 +1,4 @@
+{
+  "example-primary-model": {"input_per_million": 1.0, "output_per_million": 4.0},
+  "example-fallback-model": {"input_per_million": 0.5, "output_per_million": 2.0}
+}
