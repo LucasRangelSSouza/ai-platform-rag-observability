@@ -1,0 +1,36 @@
+{
+  "distribution_version": "0",
+  "files": [
+    {
+      "bytes": 127,
+      "path": "privacy-audit.json",
+      "sha256": "8f9affd9805955abb7d934935e6eec28ab206de6f6206eab1142f5f15a9f7384"
+    },
+    {
+      "bytes": 5741,
+      "path": "raw/records.parquet",
+      "sha256": "ab8caf94b012ce5b8a761250fdc667fd4c2210796658a3406f1cffd8e6ebf256"
+    },
+    {
+      "bytes": 5741,
+      "path": "semantic/records.parquet",
+      "sha256": "ab8caf94b012ce5b8a761250fdc667fd4c2210796658a3406f1cffd8e6ebf256"
+    },
+    {
+      "bytes": 5741,
+      "path": "trusted/records.parquet",
+      "sha256": "ab8caf94b012ce5b8a761250fdc667fd4c2210796658a3406f1cffd8e6ebf256"
+    }
+  ],
+  "license": "Synthetic records generated for tests; Apache-2.0.",
+  "privacy_gate": "passed",
+  "retrieved_at": "2026-01-01T00:00:00Z",
+  "row_counts": {
+    "raw": 9,
+    "semantic": 9,
+    "trusted": 9
+  },
+  "schema_version": "1.1",
+  "source_id": "fnde-siope",
+  "source_url": "https://www.fnde.gov.br/siope/"
+}

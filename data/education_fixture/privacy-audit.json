@@ -1,0 +1,9 @@
+{
+  "privacy_gate": "passed",
+  "record_counts": {
+    "raw": 9,
+    "semantic": 9,
+    "trusted": 9
+  },
+  "violations": []
+}

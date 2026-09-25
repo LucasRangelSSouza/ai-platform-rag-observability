@@ -1,0 +1,2 @@
+data/education_fixture/** -text
+*.parquet binary
