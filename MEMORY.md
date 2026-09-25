@@ -16,3 +16,7 @@
 ## Next verifiable task
 
 Run the gateway and Langfuse clients against one pinned live instance of each (a dated evidence record, not a permanent dependency) and investigate the education citation-coverage gap (0.988 recall vs 0.938 coverage).
+
+## Registry publish
+
+A signed `v*` tag now runs a `release` CI job that builds and pushes an immutable, provenance-attested image to `ghcr.io/lucasrangelssouza/ai-platform-rag-observability` (both a semver tag and a `sha-<full-commit>` tag). After the first publish, GHCR packages default to private — the package visibility must be flipped to Public once, manually, in the package's own Settings page (Actions cannot do this with the default token). Until that one-time step happens, `distributed-agent-runtime-lab`'s public-demo profile cannot pull it and must keep using its documented fixture stand-in.

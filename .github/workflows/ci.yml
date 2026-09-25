@@ -32,3 +32,43 @@ jobs:
           docker run -d --name rag --read-only --tmpfs /tmp --cap-drop ALL -p 127.0.0.1:8080:8080 -v "$PWD/data:/data:ro" rag-platform:ci
           for attempt in $(seq 1 20); do curl -fsS http://127.0.0.1:8080/healthz && exit 0; sleep 1; done
           docker logs rag; exit 1
+
+  # Publishes an immutable, provenance-tracked image only on a signed release
+  # tag. Never runs on a plain push to main, so main always stays deployable
+  # without accidentally publishing an unreviewed commit as a "release".
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    needs: [verify, container]
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=sha,format=long
+      - id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ghcr.io/${{ github.repository }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
