@@ -1,4 +1,8 @@
 [
   {"id": "abstention", "question": "How does the retrieval service abstain?", "expected_document_ids": ["safety"]},
-  {"id": "gateway", "question": "Which component routes approved model requests?", "expected_document_ids": ["architecture"]}
+  {"id": "gateway", "question": "Which component routes approved model requests?", "expected_document_ids": ["architecture"]},
+  {"id": "retry", "question": "Are rate-limit responses and timeouts retried with backoff?", "expected_document_ids": ["retry-policy"]},
+  {"id": "redaction", "question": "Does an exported trace keep the raw question text?", "expected_document_ids": ["trace-redaction"]},
+  {"id": "cost", "question": "How is the cost of a gateway call computed?", "expected_document_ids": ["cost-attribution"]},
+  {"id": "education", "question": "Which dataset release does the education adapter accept?", "expected_document_ids": ["education-adapter"]}
 ]

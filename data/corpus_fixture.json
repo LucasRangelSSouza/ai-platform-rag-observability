@@ -1,4 +1,38 @@
 [
-  {"id":"architecture","content":"The reference gateway can route approved model requests and records an explicit fallback decision."},
-  {"id":"safety","content":"The retrieval service abstains when the approved corpus lacks evidence and rejects prompt injection patterns."}
+  {
+    "id": "architecture",
+    "title": "Gateway routing",
+    "source_uri": "fixture://corpus_fixture.json#architecture",
+    "text": "The reference gateway can route approved model requests and records an explicit fallback decision. Routes are tried in declared order, primary first and fallback second."
+  },
+  {
+    "id": "safety",
+    "title": "Abstention and refusal",
+    "source_uri": "fixture://corpus_fixture.json#safety",
+    "text": "The retrieval service abstains when the approved corpus lacks evidence and rejects prompt injection patterns. A retrieved passage that contains instruction-like text is quarantined before generation."
+  },
+  {
+    "id": "retry-policy",
+    "title": "Retry and backoff policy",
+    "source_uri": "fixture://corpus_fixture.json#retry-policy",
+    "text": "Rate-limit responses, server errors, and timeouts are retried with exponential backoff on the same route. Authentication and missing-model errors skip to the next route without a retry. Other client errors stop the request immediately."
+  },
+  {
+    "id": "trace-redaction",
+    "title": "Trace redaction",
+    "source_uri": "fixture://corpus_fixture.json#trace-redaction",
+    "text": "Every exported trace replaces the raw question with a SHA-256 digest. Passage text and answer text are dropped from exported traces unless content export is explicitly allowed."
+  },
+  {
+    "id": "cost-attribution",
+    "title": "Token and cost attribution",
+    "source_uri": "fixture://corpus_fixture.json#cost-attribution",
+    "text": "Each gateway call records prompt tokens, completion tokens, the route, the model, and a cost computed from a configurable price table. Calls to an unpriced model record token usage and a null cost."
+  },
+  {
+    "id": "education-adapter",
+    "title": "Education corpus adapter",
+    "source_uri": "fixture://corpus_fixture.json#education-adapter",
+    "text": "The education adapter accepts only a pinned dataset release. It verifies the manifest hash and every file hash, requires a passed privacy gate, and refuses unknown columns and person-level fields."
+  }
 ]
