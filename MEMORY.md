@@ -2,7 +2,11 @@
 
 ## 2026-09-28: real local container evidence
 
-`docs/evidence/v0.2.0-container-smoke-2026-09-28.md` records a real Docker Engine run of the fixture Compose profile. The RAG image built as `rag-platform:0.2.0`; `/healthz` returned six documents and the answer endpoint returned a cited answer. It also records an independent, fixed-source 9Router health smoke from commit `25017bd1f050632b13cfa235111269c5fa4024bc`. No provider credentials were used, so gateway generation and Langfuse ingestion remain deliberately unverified live integrations.
+`docs/evidence/v0.2.0-container-smoke-2026-09-28.md` records a real Docker Engine run of the fixture Compose profile. The RAG image built as `rag-platform:0.2.0`; `/healthz` returned six documents and the answer endpoint returned a cited answer. It also records an independent, fixed-source 9Router health smoke from commit `25017bd1f050632b13cfa235111269c5fa4024bc`. No provider credentials were used, so provider-backed gateway generation remains unverified.
+
+## 2026-09-28: local Langfuse ingestion integration
+
+`docs/evidence/v0.2.0-langfuse-local-integration-2026-09-28.md` records a successful export into a real local Langfuse stack at fork commit `7ad9dfed444102f4ae678b7661d5c4ba9f934428`. The public API confirmed the stored trace had null input/output and only the question digest plus approved metadata. Langfuse v4 required `LANGFUSE_MIGRATION_V4_WRITE_MODE=dual` because this client uses the legacy ingestion contract. Native v4/OTLP ingestion remains the next compatibility task. Provider-backed 9Router generation remains unverified because no provider account was used.
 
 ## Current state
 
