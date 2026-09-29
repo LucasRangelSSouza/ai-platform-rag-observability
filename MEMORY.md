@@ -1,5 +1,9 @@
 # Project memory
 
+## 2026-09-28: real local container evidence
+
+`docs/evidence/v0.2.0-container-smoke-2026-09-28.md` records a real Docker Engine run of the fixture Compose profile. The RAG image built as `rag-platform:0.2.0`; `/healthz` returned six documents and the answer endpoint returned a cited answer. It also records an independent, fixed-source 9Router health smoke from commit `25017bd1f050632b13cfa235111269c5fa4024bc`. No provider credentials were used, so gateway generation and Langfuse ingestion remain deliberately unverified live integrations.
+
 ## Current state
 
 - v0.2.0: ingestion/chunking, BM25+hybrid retrieval, guardrails, extractive + gateway generation (citation-contained), an OpenAI-compatible gateway client, Langfuse-shaped traces with mandatory redaction, a pinned education corpus adapter, a JSON API, and a Dockerfile/Compose. 118 unit tests pass.
