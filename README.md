@@ -26,16 +26,17 @@ flowchart LR
     E -. optional .-> LF[Langfuse ingestion API]
 ```
 
-*Alt text: a fixture or pinned education corpus is chunked and indexed; a question passes guardrails, retrieval, and context quarantine into an extractive or optional gateway generator, producing a cited answer or abstention that is redacted before export to no sink, a local file, or an optional Langfuse endpoint.*
+*Alt text: the service chunks and indexes a fixture or pinned education corpus. It checks each question, retrieves and quarantines context, then uses an extractive or optional gateway generator. The service returns a cited answer or abstention and redacts traces before exporting them to no sink, a local file, or an optional Langfuse endpoint.*
 
 ## Capabilities and non-goals
 
-Implemented and tested (118 unit tests):
+Implemented and tested (124 unit tests):
 
 - source-attributed ingestion with deterministic, id-stable chunking ([ingestion.py](rag_platform/ingestion.py));
 - BM25 retrieval, a deterministic local hashing embedder, and hybrid re-ranking ([retrieval.py](rag_platform/retrieval.py));
 - prompt-injection and out-of-scope guardrails, abstention when no chunk matches ([guardrails.py](rag_platform/guardrails.py));
-- an extractive generator (no provider) and an optional gateway generator that can only cite chunk ids retrieval actually returned ([generation.py](rag_platform/generation.py));
+- language-matched gateway instructions plus deterministic English and Brazilian Portuguese refusal and abstention messages ([generation.py](rag_platform/generation.py), [language.py](rag_platform/language.py));
+- an extractive generator (no provider) and an optional gateway generator that cites only chunk ids returned by retrieval ([generation.py](rag_platform/generation.py));
 - an OpenAI-compatible gateway client: ordered routes, retry with backoff on 429/5xx/timeouts, no retry on other 4xx, error classification, per-call token and cost attribution ([gateway.py](rag_platform/gateway.py), tested against a fake in-process HTTP server, no real provider);
 - Langfuse-shaped traces (trace, retrieval span, generation observation) with mandatory redaction before export; exporters are none (default), local JSONL, and a Langfuse ingestion-API client tested against a fake in-process server ([observability.py](rag_platform/observability.py));
 - an education corpus adapter pinned to `lucasrangelss/brazil-education-data-lake` v1 by manifest SHA-256; it verifies every file, rejects unknown columns and person-level fields, and builds one cited document per municipality plus a dataset-card document ([education_corpus.py](rag_platform/education_corpus.py));
@@ -45,9 +46,11 @@ Implemented and tested (118 unit tests):
 
 Not provided: a real 9Router or Langfuse deployment (only their public HTTP contracts, exercised against fake servers), production latency or safety-coverage claims, lexical retrieval beyond BM25/hybrid, a vector database.
 
+The optional gateway prompt asks the model to answer in the question's language. The service localizes its fixed refusal and abstention messages in English and Brazilian Portuguese. The extractive generator keeps the source sentence's language. The repository has not validated language compliance against a live model endpoint.
+
 ## Quick start
 
-Python 3.10+. No provider account or Kaggle credential is needed for the default path.
+Python 3.10+. The default path runs without a provider account or Kaggle credential.
 
 ```powershell
 python -m pip install -e .
@@ -80,7 +83,7 @@ articles/            article draft and claim map
 
 ## Data, licensing, and privacy
 
-The fixture corpus is synthetic text written for this repository. The education corpus adapter reads only the pinned, hash-verified `brazil-education-data-lake` release (see [brazil-public-data-map](https://github.com/LucasRangelSSouza/brazil-public-data-map)); it has no personal data. Traces redact the question (SHA-256 only) and drop passage/answer text unless `--trace-include-content` is set explicitly. Apache-2.0 covers this repository's code.
+The project uses synthetic fixture text. Its education corpus adapter reads only the pinned, hash-verified `brazil-education-data-lake` release (see [brazil-public-data-map](https://github.com/LucasRangelSSouza/brazil-public-data-map)); that release contains no personal data. Traces store only a SHA-256 digest of the question and omit passage and answer text unless a caller explicitly sets `--trace-include-content`. Apache-2.0 covers this repository's code.
 
 ## Evaluation
 
@@ -95,7 +98,7 @@ These numbers describe the tested cases only; they are not a production retrieva
 
 ## Testing and CI
 
-`make check` runs 118 unit tests. CI runs them on Python 3.12 and builds and smoke-tests the container image.
+`make check` runs 124 unit tests. CI runs them on Python 3.12 and builds and smoke-tests the container image.
 
 ## Deployment
 
@@ -103,21 +106,21 @@ Optional. The Dockerfile and Compose profiles run locally with no cloud account.
 
 ## Trade-offs and limitations
 
-BM25 and a deterministic hashing embedder are not a production embedding model. The gateway and Langfuse clients are tested against fake servers, not a pinned live instance — see [ADR 0002](docs/adr/0002-gateway-and-observability-boundary.md) for what that does and does not prove. Education citation coverage (0.938) trails recall (0.988) on the sampled evaluation; the extractive generator's sentence selection does not always carry a citation to the right document even when retrieval found it.
+BM25 and a deterministic hashing embedder are not production embedding models. The test suite exercises the gateway and Langfuse clients against fake servers; it has not exercised a pinned live instance. [ADR 0002](docs/adr/0002-gateway-and-observability-boundary.md) records what the fake-server tests establish. Education citation coverage (0.938) trails recall (0.988) on the sampled evaluation; the extractive generator sometimes omits a citation to a document that retrieval found.
 
 ## Security and responsible use
 
-Guardrails refuse recognized prompt-injection patterns and treat passage text as data, never instructions (see [generation.py](rag_platform/generation.py) system prompt). Traces are redacted by default. No credential is required for the default path; gateway and Langfuse credentials are read from environment variables at call time and never logged. See [docs/threat-model.md](docs/threat-model.md) and [SECURITY.md](SECURITY.md).
+Guardrails refuse recognized prompt-injection patterns and treat passage text as data, never instructions (see the system prompt in [generation.py](rag_platform/generation.py)). The service redacts traces by default. The default path uses no credentials. Gateway and Langfuse clients read credentials from environment variables at call time and never log them. See [docs/threat-model.md](docs/threat-model.md) and [SECURITY.md](SECURITY.md).
 
 ## Replication and evidence
 
 [docs/reproduce.md](docs/reproduce.md) gives the full command sequence and expected artifacts. [docs/evidence/v0.2.0-local-run-2026-09-25.md](docs/evidence/v0.2.0-local-run-2026-09-25.md) is the dated record behind the numbers above.
 
-## Articles
+## Article
 
-[Observable RAG without unsupported answers](articles/observable-rag-without-unsupported-answers.md) and its [claim-to-evidence map](articles/claim-map.md) are drafts for later manual publication.
+Article: [Observable RAG without unsupported answers](https://medium.com/@lucas.rangel_18599/1a969cc077e3) on Medium (source: [articles/observable-rag-without-unsupported-answers.md](articles/observable-rag-without-unsupported-answers.md)), with its [claim-to-evidence map](articles/claim-map.md).
 
 ## Roadmap
 
 - Run the gateway and Langfuse clients against a pinned live instance and record a dated evidence file.
-- Investigate the citation-coverage gap on the education evaluation.
+- Investigate the citation-coverage difference on the education evaluation.

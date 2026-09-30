@@ -10,15 +10,12 @@ from typing import Any, Callable, Sequence
 from .generation import ExtractiveGenerator, Generation, Generator
 from .guardrails import injection_reason, question_reason
 from .ingestion import Chunk, Document, chunk_documents, document_from_fixture
+from .language import response_message
 from .observability import Exporter, NoExporter, Observation, Score, Trace, new_id, utc_now
 from .retrieval import Retriever, RetrievedChunk, build_retriever
 
 
 LOGGER = logging.getLogger(__name__)
-REFUSAL_TEXT = "I can answer questions about the approved corpus only."
-ABSTENTION_TEXT = "The approved corpus does not contain enough evidence to answer this question."
-
-
 @dataclass
 class RagService:
     retriever: Retriever
@@ -33,7 +30,7 @@ class RagService:
         trace = Trace(id=new_id(), name="rag.answer", timestamp=utc_now(), question=question)
         reason = question_reason(question)
         if reason:
-            result = _result("refused", REFUSAL_TEXT, [], reason)
+            result = _result("refused", response_message("refused", question), [], reason)
         else:
             result = self._grounded_answer(question, trace)
         trace.output = result["answer"]
@@ -55,12 +52,12 @@ class RagService:
         passages, quarantined = self._retrieve(question, trace)
         if not passages:
             reason = "context_injection_quarantined" if quarantined else "insufficient_retrieval"
-            return _result("abstained", ABSTENTION_TEXT, [], reason)
+            return _result("abstained", response_message("abstained", question), [], reason)
         generation = self._generate(question, passages, trace)
         if generation.failure:
-            return _result("abstained", ABSTENTION_TEXT, [], generation.failure)
+            return _result("abstained", response_message("abstained", question), [], generation.failure)
         if not generation.cited_chunk_ids:
-            return _result("abstained", ABSTENTION_TEXT, [], "no_valid_citation")
+            return _result("abstained", response_message("abstained", question), [], "no_valid_citation")
         by_id = {item.chunk.id: item for item in passages}
         citations = [{**by_id[chunk_id].chunk.citation(), "score": round(by_id[chunk_id].score, 6)} for chunk_id in generation.cited_chunk_ids]
         return _result("answered", generation.text, citations, None)

@@ -21,6 +21,9 @@ INJECTION_PATTERNS = (
     r"\byou are now\b",
     r"\bnew instructions\s*:",
     r"\boverride (your |the )?(safety|rules|instructions)\b",
+    r"\bignore (as |todas? as )?instru[cç][oõ]es (anteriores|pr[eé]vias|acima)\b",
+    r"\b(desconsidere|ignore) (todas? as )?(regras|instru[cç][oõ]es)\b",
+    r"\b(prompt do sistema|instru[cç][oõ]es ocultas)\b",
 )
 _COMPILED = tuple(re.compile(pattern) for pattern in INJECTION_PATTERNS)
 MAX_QUESTION_CHARS = 1000
