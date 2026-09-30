@@ -118,7 +118,7 @@ Guardrails refuse recognized prompt-injection patterns and treat passage text as
 
 ## Article
 
-Article: [Observable RAG without unsupported answers](https://medium.com/@lucas.rangel_18599/1a969cc077e3) on Medium (source: [articles/observable-rag-without-unsupported-answers.md](articles/observable-rag-without-unsupported-answers.md)), with its [claim-to-evidence map](articles/claim-map.md).
+[Observable RAG without unsupported answers](articles/observable-rag-without-unsupported-answers.md) (Markdown source; Medium publication pending) and its [claim-to-evidence map](articles/claim-map.md).
 
 ## Roadmap
 
